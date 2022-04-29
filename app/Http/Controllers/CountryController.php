@@ -3,13 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Http\Requests\CountryRequest;
 use App\Interfaces\CountryInterface;
 
 class CountryController extends Controller
 {
-    protected $countryInterface;
+    protected CountryInterface $countryInterface;
 
     public function __construct(CountryInterface $countryInterface) {
         $this->countryInterface = $countryInterface;
@@ -31,7 +30,7 @@ class CountryController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(CountryRequest $request) {
-        return $this->countryInterface->createOrUpdateCountry($request);
+        return $this->countryInterface->createOrUpdateCountry($request, null);
     }
 
     /**

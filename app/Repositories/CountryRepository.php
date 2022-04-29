@@ -1,12 +1,11 @@
 <?php
-
 namespace App\Repositories;
 
 use App\Http\Requests\CountryRequest;
 use App\Interfaces\CountryInterface;
 use App\Traits\ResponseAPI;
 use App\Models\Country;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class CountryRepository implements CountryInterface {
 

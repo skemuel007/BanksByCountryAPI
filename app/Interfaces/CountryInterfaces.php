@@ -1,7 +1,7 @@
 <?php
 namespace App\Interfaces;
 
-use App\Http\Request\CountryRequest;
+use App\Http\Requests\CountryRequest;
 
 interface CountryInterface
 {
@@ -10,7 +10,7 @@ interface CountryInterface
      *
      * @method GET api/v1/countries
      */
-    public function getAllCountries($perPage, $columns, $pageName, $page);
+    public function getAllCountries($perPage = 30, $columns = ['*'], $pageName = 'countries', $page = 1);
 
     /**
      * Create | Update countries
