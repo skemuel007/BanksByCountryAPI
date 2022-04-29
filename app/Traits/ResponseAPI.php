@@ -25,14 +25,14 @@ trait ResponseAPI {
                 'message' => $message,
                 'status' => false,
                 'statusCode' => $statusCode,
-                'data' => $data
+                'result' => $data
             ], $statusCode);
         } else {
             return response()->json([
                 'message' => $message,
                 'status' => true,
                 'statusCode' => $statusCode,
-                'data' => $data
+                'result' => $data
             ], $statusCode);
         }
     }

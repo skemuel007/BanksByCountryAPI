@@ -35,7 +35,7 @@ interface CountryInterface
      *
      * @param integer $id
      *
-     * @method PUT api/country/{id}
+     * @method Delete api/country/{id}
      * @access public
      */
     public function deactivateCountry($id);
