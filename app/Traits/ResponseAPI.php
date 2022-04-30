@@ -23,14 +23,14 @@ trait ResponseAPI {
         if( $isSuccess ) {
             return response()->json([
                 'message' => $message,
-                'status' => false,
+                'status' => true,
                 'statusCode' => $statusCode,
                 'result' => $data
             ], $statusCode);
         } else {
             return response()->json([
                 'message' => $message,
-                'status' => true,
+                'status' => false,
                 'statusCode' => $statusCode,
                 'result' => $data
             ], $statusCode);
@@ -46,7 +46,7 @@ trait ResponseAPI {
      */
     public function success($message, $data, $statusCode = 200)
     {
-        return $this->coreResponse($message, $data, $statusCode);
+        return $this->coreResponse($message, $data, $statusCode, true);
     }
 
     /**
@@ -55,7 +55,7 @@ trait ResponseAPI {
      * @param string $message
      * @param integer $statusCode
      */
-    public function error($message, $statusCode = 500) {
-        return $this->coreResponse($message, null, $statusCode, false);
+    public function error($message, $data = null, $statusCode = 500) {
+        return $this->coreResponse($message, $data, $statusCode, false);
     }
 }

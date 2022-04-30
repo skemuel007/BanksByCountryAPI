@@ -3,34 +3,36 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\CountryRequest;
-use App\Interfaces\CountryInterface;
+use App\Services\ICountryService;
+use Illuminate\Http\Request;
 
 class CountryController extends Controller
 {
-    protected CountryInterface $countryInterface;
+    protected ICountryService $countryService;
 
-    public function __construct(CountryInterface $countryInterface) {
-        $this->countryInterface = $countryInterface;
+    public function __construct(ICountryService $countryService) {
+        $this->countryService = $countryService;
     }
 
     /**
      * Display a paginated listing of the resource.
      *
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function index($perPage = 30, $columns = ['*'], $pageName = 'countries', $page = 1) {
-        return $this->countryInterface->getAllCountries($perPage, $columns, $pageName, $page);
+    public function index(Request $request) {
+
+        return $this->countryService->getAllCountries($request);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\UserRequest  $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CountryRequest $request) {
-        return $this->countryInterface->createOrUpdateCountry($request, null);
+    public function store(Request $request) {
+        return $this->countryService->saveOrUpdateCountry($request, null);
     }
 
     /**
@@ -40,18 +42,18 @@ class CountryController extends Controller
      * @return \Illuminate\Http\Respons
      */
     public function show($id) {
-        return $this->countryInterface->getCountryById($id);
+        return $this->countryService->getCountryById($id);
     }
 
     /**
      * Updates the specified resource in db
      *
-     * @param  \App\Http\Requests\UserRequest  $request
+     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(CountryRequest $request, $id) {
-        return $this->countryInterface->createOrUpdateCountry($request, $id);
+    public function update(Request $request, $id) {
+        return $this->countryService->saveOrUpdateCountry($request, $id);
     }
 
     /**
@@ -60,7 +62,7 @@ class CountryController extends Controller
      * @param int $id
      * return \Illuminate\Http\Response
      */
-    public function destroy($id) {
-        return $this->countryInterface->deactivateCountry($id);
+    public function deactivate($id) {
+        return $this->countryService->deactivateCountry($id);
     }
 }

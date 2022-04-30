@@ -1,91 +1,72 @@
 <?php
 namespace App\Repositories;
 
-use App\Http\Requests\CountryRequest;
+use App\Dtos\CountryQueryParam;
 use App\Interfaces\CountryInterface;
 use App\Traits\ResponseAPI;
 use App\Models\Country;
-use Illuminate\Support\Facades\DB;
+use Symfony\Component\Console\Output\ConsoleOutput;
 
 class CountryRepository implements CountryInterface {
 
     use ResponseAPI; // use trait
+    protected $output;
 
-    public function getAllCountries($perPage = 30, $columns = ['*'], $pageName = 'countries', $page = 1) {
-        try {
-            $countries = Country::where('active', '=', true)->paginate(
-                $perPage = $perPage,
-                $columns = $columns,
-                $pageName = $pageName,
-                $page = $page
-            );
-
-            return $this->success('All countries', $countries);
-
-        } catch(\Exception $ex) {
-            return $this->error($ex->getMessage(), $ex->getCode());
-        }
+    public function __construct()
+    {
+        $this->output = new ConsoleOutput();
     }
 
-    public function createOrUpdateCountry(CountryRequest $request, $id = null) {
-        DB::beginTransaction();
-        try {
-            // if country exists then find it by id,
-            // then update
-            // else create the country
-            $country = $id ? Country::find($id) : new Country;
+    public function getAllCountries(CountryQueryParam $queryParam) {
 
-            if ($id && !$country) {
-                return $this->error("No country with ID: $id", 404);
-            }
+        $page = $queryParam->page;
+        $perPage = $queryParam->page_size;
+        $columns = ['*'];
+        $pageName = 'page';
 
-            $country->name = $request->name;
-            $country->code = $request->code;
-            $country->save();
+        $countries = Country::where('active', '=', true);
 
-            DB::commit();
-
-        } catch(\Exception $ex) {
-            DB::rollBack();
-            return $this->error($ex->getMessage(), $ex->getCode());
+        if (strtolower($queryParam->order_by) == 'desc') {
+            $countries = $countries->orderBy('id', 'DESC');
+        } else {
+            $countries = $countries->orderBy('id', 'ASC');
+            $this->output->writeln(json_encode($countries->paginate()));
         }
+
+        if($queryParam->search) {
+            $countries = $countries->OrWhere('name', 'LIKE', "'%$queryParam->search%'")
+                    ->orWhere('code', 'LIKE', "'%$queryParam->search%'");
+        }
+
+        $countries = $countries->paginate(
+            $perPage = $perPage,
+            $columns = $columns,
+            $pageName = $pageName,
+            $page = $page
+        );
+        // $this->output->writeln(json_encode($countries));
+
+        return $countries;
+    }
+
+    public function createOrUpdateCountry(Country $country) {
+        return $country->save();
+    }
+
+    public function checkCountryExists($country_name) {
+        $result = Country::whereRaw("name LIKE '%" . $country_name ."%'")->first();
+        return $result ? true : false;
     }
 
     public function getCountryById($id) {
-        try {
-            $country = Country::find($id);
-
-            // check the country
-            if (!$country) {
-                return $this->error("No country with this $id", 404);
-            }
-            return $this->success('Country record', $country);
-
-        } catch(\Exception $ex) {
-            return $this->error($ex->getMessage(), $ex->getCode());
-        }
+        $country = Country::find($id);
+        return $country;
     }
 
-    public function deactivateCountry($id) {
-        DB::beginTransaction();
-        try {
-            // if country exists then find it by id,
-            // then update
-            // else create the country
-            $country = Country::find($id);
-
-            if (!$country) {
-                return $this->error("No country with ID: $id", 404);
-            }
-
+    public function deactivateCountry(Country $country) {
             $country->active = false;
             $country->save();
 
-            DB::commit();
-
-        } catch(\Exception $ex) {
-            DB::rollBack();
-            return $this->error($ex->getMessage(), $ex->getCode());
-        }
+            return $country;
     }
 }

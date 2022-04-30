@@ -8,7 +8,7 @@
 </p>
 
 <p>Code reference pattern <a href="https://blog.devgenius.io/laravel-api-repository-pattern-make-your-code-more-structured-the-simple-guide-5b770da766d7"></a>
-</a>
+<p>Swagger <a href="https://dev.to/avsecdongol/laravel-api-documentation-with-swagger-and-passport-3ec0"></a>
 
 ## About Laravel
 

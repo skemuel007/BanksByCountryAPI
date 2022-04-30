@@ -5,19 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Country extends Model
+class Bank extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'name', 'code'
+        'name', 'country_id'
     ];
 
     protected $hidden = [
         'active'
     ];
 
-    public function banks() {
-        return $this->hasMany(Bank::class);
+    public function country() {
+        return $this->belongsTo(Country::class, 'country_id');
     }
 }

@@ -1,7 +1,8 @@
 <?php
 namespace App\Interfaces;
 
-use App\Http\Requests\CountryRequest;
+use App\Dtos\CountryQueryParam;
+use App\Models\Country;
 
 interface CountryInterface
 {
@@ -10,7 +11,7 @@ interface CountryInterface
      *
      * @method GET api/v1/countries
      */
-    public function getAllCountries($perPage = 30, $columns = ['*'], $pageName = 'countries', $page = 1);
+    public function getAllCountries(CountryQueryParam $queryParam);
 
     /**
      * Create | Update countries
@@ -18,7 +19,8 @@ interface CountryInterface
      * @param \App\Http\Requests\CountryRequest $request
      * @param integer $id
      */
-    public function createOrUpdateCountry(CountryRequest $request, $id = null);
+    public function createOrUpdateCountry(Country $country);
+    public function checkCountryExists($country_name);
 
     /**
      * Get Country By Id
@@ -38,5 +40,5 @@ interface CountryInterface
      * @method Delete api/country/{id}
      * @access public
      */
-    public function deactivateCountry($id);
+    public function deactivateCountry(Country $country);
 }
