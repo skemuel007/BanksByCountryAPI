@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\BankController;
+use App\Http\Controllers\CountryController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +16,25 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group([
+    'prefix' => 'country'
+], function($router) {
+
+    Route::get('/', [CountryController::class, 'index']);
+    Route::get('/{id}', [CountryController::class, 'show']);
+});
+
+Route::group([
+    'prefix' => 'bank'
+], function($router) {
+    Route::get('/', [BankController::class, 'index']);
+    Route::get('/{id}', [BankController::class, 'show']);
+    Route::post('/', [BankController::class, 'store']);
+    Route::put('/{id}', [BankController::class, 'deactivateBank']);
+});
+
+Route::group([
+    'prefix' => 'bank_country'
+], function($router) {
+    Route::get('/', [BankController::class, 'banksByCountry']);
 });
