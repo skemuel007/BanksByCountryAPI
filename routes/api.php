@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group([
+Route::middleware(['throttle:api'])->group([
     'prefix' => 'country'
 ], function($router) {
 
@@ -24,7 +24,7 @@ Route::group([
     Route::get('/{id}', [CountryController::class, 'show']);
 });
 
-Route::group([
+Route::middleware(['throttle:api'])->group([
     'prefix' => 'bank'
 ], function($router) {
     Route::get('/', [BankController::class, 'index']);
@@ -33,7 +33,7 @@ Route::group([
     Route::put('/{id}', [BankController::class, 'deactivateBank']);
 });
 
-Route::group([
+Route::middleware(['throttle:api'])->group([
     'prefix' => 'bank_country'
 ], function($router) {
     Route::get('/', [BankController::class, 'banksByCountry']);
